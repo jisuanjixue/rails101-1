@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
- before_action :authenticate_user! , only: [:new, :create]
+ before_action :authenticate_user! , only: [:new, :create, :edit, :update, :destroy]
   def index
     @movies = Movie.all
   end
@@ -13,8 +13,11 @@ class MoviesController < ApplicationController
   end
 
   def edit
+  if current_user != @group.user
     @movie = Movie.find(params[:id])
+    redirect_to root_path, alert: "You have no permission."
   end
+end
 
 
   def create
@@ -29,13 +32,25 @@ class MoviesController < ApplicationController
 
   def update
     @movie = Movie.find(params[:id])
-    @movie.update(movie_params)
 
-    redirect_to movies_path
+    if current_user != @group.user
+       redirect_to root_path, alert: "You have no permission."
+     end
+
+   if  @movie.update(movie_params)
+  redirect_to movies_path, notice: "Update Success"
+  else
+  render :edit
+  end
 end
 
  def destroy
    @movie = Movie.find(params[:id])
+
+   if current_user != @group.user
+         redirect_to root_path, alert: "You have no permission."
+       end
+
    if @movie.destroy
   flash[:alert] = "Movie deleted"
    redirect_to movies_path
