@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :movies
-
   resources :movies do
-      resources :reviews
+    member do
+      post :favorite
+      post :hate
+    end
+
+  resources :reviews
     end
 
 root 'movies#index'

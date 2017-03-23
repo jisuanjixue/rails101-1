@@ -60,6 +60,32 @@ else
  end
 end
 
+def favorite
+   @movie = Movie.find(params[:id])
+
+    if !current_user.is_member_of?(@movie)
+      current_user.favorite!(@movie)
+      flash[:notice] = "成功收藏"
+    else
+      flash[:warning] = "你已经收藏了！"
+    end
+
+    redirect_to movie_path(@movie)
+  end
+
+  def hate
+    @movie = Movie.find(params[:id])
+
+    if current_user.is_member_of?(@movie)
+      current_user.hate!(@movie)
+      flash[:alert] = "已放弃收藏"
+    else
+      flash[:warning] = "你还没收藏此电影，喜欢就收藏！"
+    end
+
+    redirect_to movie_path(@movie)
+  end
+
   private
 
    def movie_params
