@@ -8,6 +8,7 @@ class MoviesController < ApplicationController
     @movie = Movie.new
   end
 
+
   def show
     @movie = Movie.find(params[:id])
     @reviews = @movie.reviews.recent.paginate(:page => params[:page], :per_page => 5)
@@ -16,7 +17,7 @@ class MoviesController < ApplicationController
   def edit
   if current_user != @group.user
     @movie = Movie.find(params[:id])
-    redirect_to root_path, alert: "You have no permission."
+    redirect_to root_path, alert: "你没有权限."
   end
 end
 
